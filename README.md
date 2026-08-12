@@ -17,7 +17,15 @@ see the published blueprint (linked in project notes).
   same interface later and should drop in without changing scheduler.py.
 - `cluster/` — everything needed to reproduce the environment and get an
   interactive GPU shell on the Slurm cluster.
-- `tests/` — run with `python -m pytest` from the repo root.
+- `tests/` — Python tests, run with `python -m pytest` from the repo root.
+- `gateway/` — Node.js + TypeScript service in front of the inference
+  engine: `POST /generate` to submit a prompt, a `/stream` WebSocket to
+  receive tokens back, `GET /metrics` for a snapshot, and a `RequestQueue`
+  that admits/queues/rejects requests by concurrency limit (request-level
+  backpressure, distinct from the token-level batching in
+  `engine/scheduler/`). Like the Python side, it's built against a
+  swappable `Backend` interface with a `StubBackend` fake, so it runs and
+  tests fully without the real model. See `gateway/README.md`.
 
 ## Step 1: verify the environment on the cluster
 
@@ -51,5 +59,5 @@ see the published blueprint (linked in project notes).
 - [x] Continuous batching scheduler (built + unit-tested off-cluster, no GPU needed)
 - [~] Paged KV-cache (block allocator done off-cluster; kernel integration still pending cluster access)
 - [ ] Benchmark harness vs vLLM
-- [ ] Node.js/TypeScript gateway
+- [x] Node.js/TypeScript gateway (built + tested off-cluster, no GPU needed; runs against StubBackend until the real engine is reachable)
 - [ ] React/TypeScript dashboard
