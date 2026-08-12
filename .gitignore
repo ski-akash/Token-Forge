@@ -1,0 +1,23 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+*.egg-info/
+.pytest_cache/
+
+# Node / TS (for later weeks)
+node_modules/
+dist/
+build/
+
+# Data / checkpoints / logs
+checkpoints/
+wandb/
+*.pt
+*.safetensors
+.env
+
+# Editor / OS
+.vscode/
+.DS_Store
